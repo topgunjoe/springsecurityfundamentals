@@ -8,14 +8,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
+import javax.persistence.Table;
 import org.springframework.security.core.GrantedAuthority;
 
 @Entity
+@Table(name = "tbl_role")
 public class Role implements GrantedAuthority {
 
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private String name;
 	@ManyToMany(mappedBy = "roles")

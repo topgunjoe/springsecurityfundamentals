@@ -1,9 +1,7 @@
 package com.bharath.springcloud.security;
 
 import java.security.KeyPair;
-
 import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +16,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.rsa.crypto.KeyStoreKeyFactory;
@@ -40,6 +39,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Autowired
 	private DataSource dataSource;
 
+
 	@Value("${keyFile}")
 	private String keyFile;
 	@Value("${password}")
@@ -47,17 +47,27 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Value("${alias}")
 	private String alias;
 
+	/*@Override
+	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+		endpoints.tokenStore(new JdbcTokenStore(dataSource))
+				.accessTokenConverter(jwtAccessTokenConverter())
+				.authenticationManager(authenticationManager)
+				.userDetailsService(userDetailsService);
+	}*/
+
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-		endpoints.tokenStore(tokenStore()).accessTokenConverter(jwtAccessTokenConverter())
-				.authenticationManager(authenticationManager).userDetailsService(userDetailsService);
+		endpoints.tokenStore(tokenStore())
+				.accessTokenConverter(jwtAccessTokenConverter())
+				.authenticationManager(authenticationManager)
+				.userDetailsService(userDetailsService);
 	}
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory().withClient("couponclientapp").secret(passwordEncoder.encode("9999"))
 				.authorizedGrantTypes("password", "refresh_token").scopes("read", "write").resourceIds(RESOURCE_ID);
-		;
+
 	}
 	
 	@Override
