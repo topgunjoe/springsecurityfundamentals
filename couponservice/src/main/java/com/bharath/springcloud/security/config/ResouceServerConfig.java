@@ -25,7 +25,7 @@ public class ResouceServerConfig extends ResourceServerConfigurerAdapter {
 		http.authorizeRequests().mvcMatchers(HttpMethod.GET, "/couponapi/coupons/{code:^[A-Z]*$}")
 				.permitAll()
 				//.hasAnyRole("USER", "ADMIN").mvcMatchers(HttpMethod.POST, "/couponapi/coupons").hasRole("ADMIN")
-				.anyRequest().denyAll().and().csrf().disable();
+				.anyRequest().permitAll().and().csrf().disable();
 
 		http.cors(corsCustomizer -> {
 			CorsConfigurationSource corsConfigurationSource = request -> {
